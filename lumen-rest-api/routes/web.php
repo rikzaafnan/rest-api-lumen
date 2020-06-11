@@ -12,5 +12,11 @@
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return "run sukses";
+    // return $router->app->version();
 });
+
+$router->post('/products', 'ProductController@store' );
+$router->get('/products', 'ProductController@index' );
+$router->put('/products/{productId}', 'ProductController@update' );
+$router->delete('/products/{productId}', 'ProductController@destroy' );
