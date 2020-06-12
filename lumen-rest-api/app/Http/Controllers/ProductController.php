@@ -45,7 +45,18 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'nama' => 'required|string',
+            'harga' => 'required|integer',
+            'warna' => 'required|string',
+            'kondisi' => 'required|in:baru,lama',
+            'deskripsi' => 'string',
+            'uuid' => 'string'
+        ]);
+        
         $data = $request->all();
+
+
 
         $product = Product::create($data);
 
@@ -60,7 +71,7 @@ class ProductController extends Controller
         return response()->json($response, $response['code']);
     }
 
-    public function update(Request $request, $productId)
+    public function show(Request $request, $productId)
     {
         $product = Product::where('id', $productId)->first();
         
@@ -84,18 +95,61 @@ class ProductController extends Controller
         return response()->json($response, $response['code']);
     }
 
+    public function update(Request $request, $productId)
+    {
+        $product = Product::where('id', $productId)->first();
+
+        if(!$product) {
+            $response = [
+                'message' => [
+                    'text' => 'Data tidak ditemukan',
+                ],
+                'code' => 500,
+            ];
+
+            return response()->json($response, $response['code']);
+        }
+
+        $data = $request->all();
+
+        $product->fill($data);
+        
+        if($product) {
+            $response = [
+                'message' => [
+                    'text' => 'Success',
+                ],
+                'code' => 200,
+                'data' => $data,
+            ];
+        } else {
+            $response = [
+                'message' => [
+                    'text' => 'Data kosong',
+                ],
+                'code' => 500,
+            ];
+        }
+
+        return response()->json($response, $response['code']);
+    }
+
     public function destroy($productId)
     {
-        if(!$productId) {
+      
+
+        $product = Product::where('id', $productId)->delete();
+
+        if(!$product) {
             $response = [
                 'message' => [
                     'text' => 'Data Tidak ada',
                 ],
                 'code' => 500,
             ];
-        } 
+            return response()->json($response, $response['code']);
 
-        $product = Product::where('id', $productId)->delete();
+        } 
 
         if($product) {
             $response = [
