@@ -21,3 +21,9 @@ $router->get('/products', 'ProductController@index' );
 $router->get('/products/{productId}', 'ProductController@show' );
 $router->put('/products/{productId}', 'ProductController@update' );
 $router->delete('/products/{productId}', 'ProductController@destroy' );
+
+// register user
+$router->post('api/v1/registers','UserController@register');
+
+// login user
+$router->post('api/v1/login', 'UserController@login');
